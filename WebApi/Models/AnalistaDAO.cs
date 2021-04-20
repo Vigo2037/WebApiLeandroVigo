@@ -9,51 +9,54 @@ using WebApi.Models;
 
 namespace App.Repository
 {
-    public class AlunoDAO
+    public class AnalistaDAO
     {
         //private string stringConexao = ConfigurationManager.ConnectionStrings["ConexaoDev"].ConnectionString;
-        private string stringConexao = @"Data Source = (LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\repos\projetoWebApi\WebApiCompleta_banco\WebApi\App_Data\Database.mdf;Integrated Security = True";
-
+        private string stringConexa = @"Data Source = (LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\User\Desktop\WebApiLeandroVigo\WebApi\App_Data\Database.mdf;Integrated Security = True";
+            
+          
         
         //private string stringConexao1 = ConfigurationManager.AppSettings["ConnectionString"];
 
         private IDbConnection conexao;
+        private string stringConexao;
 
-        public AlunoDAO()
+        public AnalistaDAO()
         {
             conexao = new SqlConnection(stringConexao);
             conexao.Open();
         }
 
-        public List<Alunos> ListarAlunosDB(int? id = null)
+        public List<Analistas> ListarAnalistaDB(int? id = null)
         {
-            var listaAlunos = new List<Alunos>();
+            var listaAnalista = new List<Analistas>();
 
             try
             {
                 IDbCommand selectCmd = conexao.CreateCommand();
 
                 if (id == null)
-                    selectCmd.CommandText = "select * from Alunos";
+                    selectCmd.CommandText = "select * from Analista";
                 else
-                    selectCmd.CommandText = $"select * from Alunos where id = {id}";
+                    selectCmd.CommandText = $"select * from Analista where id = {id}";
 
                 IDataReader resultado = selectCmd.ExecuteReader();
                 while (resultado.Read())
                 {
-                    var alu = new Alunos();
+                    var ana = new Analistas();
                     
-                        alu.id = Convert.ToInt32(resultado["Id"]);
-                        alu.nome = Convert.ToString(resultado["nome"]);
-                        alu.sobrenome = Convert.ToString(resultado["sobrenome"]);
-                        alu.telefone = Convert.ToString(resultado["telefone"]);
-                        alu.ra = Convert.ToInt32(resultado["ra"]);
+                        ana.id = Convert.ToInt32(resultado["Id"]);
+                        ana.nome = Convert.ToString(resultado["nome"]);
+                        ana.cpf = Convert.ToInt32(resultado["cpf"]);
+                        ana.telefone = Convert.ToString(resultado["telefone"]);
+                        ana.email = Convert.ToString(resultado["email"]);
+                        ana.idade = Convert.ToInt32(resultado["idade"]);
                     
 
-                    listaAlunos.Add(alu);
+                    listaAnalista.Add(ana);
                 }
 
-                return listaAlunos;
+                return listaAnalista;
             }
             catch (Exception ex)
             {
@@ -65,24 +68,31 @@ namespace App.Repository
             }
         }
 
-        public void InserirAlunoDB(Alunos aluno)
+        internal void DeletarAnalistaDB(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal void AtualizarAnalistaDB(Analistas analista)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void InserirAnalistaDB(Analistas analista)
         {
             try
             {
                 IDbCommand insertCmd = conexao.CreateCommand();
-                insertCmd.CommandText = "insert into Alunos (nome, sobrenome, telefone, ra) values (@nome, @sobrenome, @telefone, @ra)";
+                insertCmd.CommandText = "insert into Analista (nome, telefone, idade) values (@nome, @telefone, @idade)";
 
-                IDbDataParameter paramNome = new SqlParameter("nome", aluno.nome);
+                IDbDataParameter paramNome = new SqlParameter("nome", analista.nome);
                 insertCmd.Parameters.Add(paramNome);
 
-                IDbDataParameter paramSobrenome = new SqlParameter("sobrenome", aluno.sobrenome);
-                insertCmd.Parameters.Add(paramSobrenome);
-
-                IDbDataParameter paramTelefone = new SqlParameter("telefone", aluno.telefone);
+                IDbDataParameter paramTelefone = new SqlParameter("telefone", analista.telefone);
                 insertCmd.Parameters.Add(paramTelefone);
 
-                IDbDataParameter paramRa = new SqlParameter("ra", aluno.ra);
-                insertCmd.Parameters.Add(paramRa);
+                IDbDataParameter paramIdade = new SqlParameter("idade", analista.idade);
+                insertCmd.Parameters.Add(paramIdade);
 
                 insertCmd.ExecuteNonQuery();
             }
@@ -96,24 +106,22 @@ namespace App.Repository
             }
         }
 
-        public void AtualizarAlunoDB(Alunos aluno)
+        public void AtualizarAlunoDB(Analistas analista)
         {
             try
             {
                 IDbCommand updateCmd = conexao.CreateCommand();
-                updateCmd.CommandText = "update Alunos set nome = @nome, sobrenome = @sobrenome, telefone = @telefone, ra = @ra where id = @id";
+                updateCmd.CommandText = "update Analistas set nome = @nome,cpf = @cpf, telefone = @telefone, email = @email where id = @id";
 
-                IDbDataParameter paramNome = new SqlParameter("nome", aluno.nome);
-                IDbDataParameter paramSobrenome = new SqlParameter("sobrenome", aluno.sobrenome);
-                IDbDataParameter paramTelefone = new SqlParameter("telefone", aluno.telefone);
-                IDbDataParameter paramRa = new SqlParameter("ra", aluno.ra);
+                IDbDataParameter paramNome = new SqlParameter("nome", analista.nome);
+                IDbDataParameter paramTelefone = new SqlParameter("telefone", analista.telefone);
+                IDbDataParameter paramIdade = new SqlParameter("idade", analista.idade);
 
                 updateCmd.Parameters.Add(paramNome);
-                updateCmd.Parameters.Add(paramSobrenome);
                 updateCmd.Parameters.Add(paramTelefone);
-                updateCmd.Parameters.Add(paramRa);
+                updateCmd.Parameters.Add(paramIdade);
 
-                IDbDataParameter paramID = new SqlParameter("id", aluno.id);
+                IDbDataParameter paramID = new SqlParameter("id", analista.id);
                 updateCmd.Parameters.Add(paramID);
 
                 updateCmd.ExecuteNonQuery();
@@ -133,7 +141,7 @@ namespace App.Repository
             try
             {
                 IDbCommand DeleteCmd = conexao.CreateCommand();
-                DeleteCmd.CommandText = "delete from Alunos where id = @id";
+                DeleteCmd.CommandText = "delete from Analista where id = @id";
 
                 IDbDataParameter paramID = new SqlParameter("id", id);
                 DeleteCmd.Parameters.Add(paramID);

@@ -15,19 +15,19 @@ namespace WebApi.Controllers
     Para utilizar o EnableCors é necessário referenciar corretamente using System.Web.Http.Cors
      */
     [EnableCors("*","*","*")]
-    public class AlunoController : ApiController
+    public class AnalistaController : ApiController
     {
-        // GET: api/Aluno
+        // GET: api/Analista
 
-        // GET: api/Aluno
+        // GET: api/Analista
         [HttpGet]
         [Route("Recuperar")]
           public IHttpActionResult Get()
           {
             try
             {
-                Alunos aluno = new Alunos();
-                return Ok(aluno.ListarAluno());
+                Analistas analista = new Analistas();
+                return Ok(analista.ListarAnalista());
             }              
             catch (Exception ex)
             {
@@ -35,12 +35,12 @@ namespace WebApi.Controllers
              }
             
           }        
-          // GET: api/Aluno/5
-          [Route("Recuperar/{id:int}/{nome}/{sobrenome=Barcelos}")]
-          public Alunos Get(int id)
+          // GET: api/Analista/5
+          [Route("Recuperar/{id:int}/{nome}/{nome=vigo}")]
+          public Analistas Get(int id)
           {
-              Alunos aluno = new Alunos();
-              return aluno.ListarAluno().Where(x => x.id ==id).FirstOrDefault();
+              Analistas aluno = new Analistas();
+              return aluno.ListarAnalista().Where(x => x.id ==id).FirstOrDefault();
           }
         [HttpGet]
         [Route(@"RecuperaPorDataNome/{data:regex([0-9]{4}\-[0-9]{2})}/{nome:minlength(5)}")]
@@ -48,12 +48,12 @@ namespace WebApi.Controllers
         {
             try
             {
-                Alunos aluno = new Alunos();
-                IEnumerable<Alunos> alunos = aluno.ListarAluno().Where(x => x.data == data || x.nome == nome);
-                if (!alunos.Any())
+                Analistas analistas = new Analistas();
+                IEnumerable<Analistas> analista = analistas.ListarAnalista().Where(x => x.data == data || x.nome == nome);
+                if (!analista.Any())
                     return NotFound();
 
-                return Ok(alunos);
+                return Ok(analista);
 
             }
             catch (Exception ex)
@@ -67,30 +67,30 @@ namespace WebApi.Controllers
 
                  
 
-        // POST: api/Aluno
-        public List<Alunos> Post(Alunos aluno)
+        // POST: api/Analista
+        public List<Analistas> Post(Analistas analista)
         {
-            Alunos _aluno = new Alunos();
-            _aluno.Inserir(aluno);
-            return _aluno.ListarAluno();
+            Analistas _analista = new Analistas();
+            _analista.Inserir(analista);
+            return _analista.ListarAnalista();
 
         }
 
-        // PUT: api/Aluno/5
-        public List<Alunos> Put(int id, Alunos aluno)
+        // PUT: api/Analista/5
+        public List<Analistas> Put(int id, Analistas analista)
         {
-            Alunos _aluno = new Alunos();
-            _aluno.id = id;
-            _aluno.Atualizar(aluno);
-            return _aluno.ListarAluno();
+            Analistas _analista = new Analistas();
+            _analista.id = id;
+            _analista.Atualizar(analista);
+            return _analista.ListarAnalista();
 
         }
 
-        // DELETE: api/Aluno/5
+        // DELETE: api/Analista/5
         public void Delete(int id)
         {
-            Alunos _aluno = new Alunos();
-            _aluno.Deletar(id);
+            Analistas _Analista = new Analistas();
+            _Analista.Deletar(id);
            
 
         }
